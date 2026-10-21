@@ -12,6 +12,7 @@ export function FavoriteButton({ active, onPress }: Props) {
       onPress={onPress}
       hitSlop={12}
       accessibilityRole="button"
+      accessibilityState={{ selected: active }}
       accessibilityLabel={active ? 'Убрать из избранного' : 'Добавить в избранное'}
     >
       <Text style={[styles.star, active && styles.active]}>{active ? '★' : '☆'}</Text>
