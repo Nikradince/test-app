@@ -1,7 +1,12 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
-import { filterMatches, formatStart, parseMatches, statusLabel } from '../src/matches.ts';
+import ts from 'typescript';
+const source = readFileSync(new URL('../src/matches.ts', import.meta.url), 'utf8');
+const { outputText } = ts.transpileModule(source, {compilerOptions: {module: ts.ModuleKind.ESNext}});
+const { filterMatches, formatStart, parseMatches, statusLabel } = await import(
+  `data:text/javascript;base64,${Buffer.from(outputText).toString('base64')}`
+);
 
 const data = parseMatches(JSON.parse(readFileSync(new URL('../data/matches.json', import.meta.url), 'utf8')));
 test('all keeps every match, including live and postponed', () => {
@@ -37,3 +42,4 @@ test('malformed responses and duplicate IDs fail explicitly', () => {
     assert.throws(() => parseMatches(value));
   }
 });
+
